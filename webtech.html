@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Technologies — Task 02.03.2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ROOT & RESET
+============================================================ */
+:root {
+  --ink:    #1a1a2e;
+  --cream:  #f5f0e8;
+  --gold:   #c9a84c;
+  --rust:   #c0392b;
+  --muted:  #5a5a72;
+  --border: #d0c8b8;
+  --green:  #1e7a40;
+  --white:  #ffffff;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Source Serif 4', Georgia, serif;
+  line-height: 1.72;
+  min-height: 100vh;
+}
+img { display: block; max-width: 100%; }
+code {
+  font-family: 'Courier New', monospace;
+  background: #e8e2d8;
+  padding: 1px 6px;
+  font-size: 0.82em;
+  border-radius: 2px;
+}
+pre {
+  background: var(--ink);
+  color: var(--gold);
+  padding: 14px 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.77rem;
+  overflow-x: auto;
+  line-height: 1.85;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+.topbar {
+  background: var(--ink);
+  color: var(--gold);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  padding: 7px 16px;
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+.main-nav {
+  background: var(--cream);
+  border-bottom: 2.5px solid var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 16px;
+  position: sticky;
+  top: 33px;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.main-nav .nav-brand {
+  display: flex;
+  align-items: center;
+  padding: 0 18px 0 4px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--ink);
+  border-right: 1px solid var(--border);
+  margin-right: 4px;
+  letter-spacing: 0.03em;
+}
+.main-nav button {
+  background: none;
+  border: none;
+  border-right: 1px solid var(--border);
+  padding: 14px 16px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  white-space: nowrap;
+}
+.main-nav button:first-of-type { border-left: 1px solid var(--border); }
+.main-nav button:hover { background: #ede8de; }
+.main-nav button.active { background: var(--ink); color: var(--gold); }
+
+/* ============================================================
+   MARQUEE BAR
+============================================================ */
+.marquee-bar {
+  background: var(--rust);
+  color: #fff;
+  font-size: 0.82rem;
+  padding: 7px 0;
+  overflow: hidden;
+}
+
+/* ============================================================
+   PAGE SYSTEM
+============================================================ */
+.page { display: none; animation: fadeIn 0.3s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
+/* ============================================================
+   SHARED LAYOUT HELPERS
+============================================================ */
+.page-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 28px 70px; }
+.ph { padding: 38px 28px 20px; border-bottom: 1px solid var(--border); }
+.ph h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem,4vw,2.8rem); line-height: 1.1; }
+.ph h1 em { color: var(--gold); font-style: normal; }
+.ph p { color: var(--muted); font-size: 0.92rem; margin-top: 8px; }
+.sh {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  border-bottom: 1.5px solid var(--ink);
+  padding-bottom: 7px;
+  margin-bottom: 20px;
+}
+.sec { margin-bottom: 52px; }
+.lbl {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--gold);
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  padding: 2px 9px;
+  margin-bottom: 12px;
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.box { background: var(--white); border: 1.5px solid var(--border); padding: 20px 22px; }
+.box h3 { font-family:'Playfair Display',serif; font-size:1rem; margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:6px; }
+.banner-img { width:100%; height:170px; object-fit:cover; border:2px solid var(--ink); margin-bottom:26px; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; font-size:0.86rem; }
+th { background:var(--ink); color:var(--gold); padding:10px 13px; text-align:left; font-family:'Playfair Display',serif; }
+td { border:1px solid var(--border); padding:9px 13px; vertical-align:top; }
+tr:nth-child(even) td { background:#ece7dd; }
+tr:hover td { background:#e2dbd0; transition:background .12s; }
+table caption { font-family:'Playfair Display',serif; font-size:0.93rem; margin-bottom:8px; color:var(--muted); font-style:italic; }
+
+/* ============================================================
+   PAGE 1 — HOME
+============================================================ */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  min-height: 340px;
+  border-bottom: 2px solid var(--ink);
+}
+.hero-text { padding: 44px 34px; border-right: 2px solid var(--ink); }
+.hero-text .kicker { font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--rust); margin-bottom:12px; }
+.hero-text h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3.2rem); line-height:1.08; margin-bottom:16px; }
+.hero-text h1 em { color:var(--gold); font-style:normal; }
+.hero-text p { color:var(--muted); font-size:0.91rem; }
+.hero-img { overflow:hidden; }
+.hero-img img { width:100%; height:100%; object-fit:cover; }
+.intro-grid { display:grid; grid-template-columns:repeat(3,1fr); border-bottom:2px solid var(--ink); }
+.intro-col { padding:22px; border-right:1px solid var(--border); }
+.intro-col:last-child { border-right:none; }
+.intro-col img { width:100%; height:120px; object-fit:cover; margin-bottom:11px; border:1px solid var(--border); }
+.intro-col h3 { font-family:'Playfair Display',serif; font-size:0.97rem; margin-bottom:7px; }
+.intro-col p { font-size:0.82rem; color:var(--muted); }
+.fmt-box { background:var(--white); border:1.5px solid var(--border); padding:22px 24px; margin-bottom:18px; font-size:0.96rem; line-height:2.3; }
+.tag-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:13px; }
+.tag-card { background:var(--white); border:1.5px solid var(--border); padding:15px; }
+.tn { font-family:'Courier New',monospace; background:var(--ink); color:var(--gold); padding:2px 7px; font-size:0.73rem; display:inline-block; margin-bottom:7px; }
+.tag-card p { font-size:0.78rem; color:var(--muted); line-height:1.5; }
+.td { margin-top:7px; font-size:0.94rem; }
+/* Timeline */
+.tl { border-left:3px solid var(--gold); padding-left:22px; }
+.tl-item { margin-bottom:16px; position:relative; }
+.tl-item::before { content:''; width:11px; height:11px; background:var(--gold); border-radius:50%; position:absolute; left:-29px; top:6px; }
+.tl-year { font-family:'Playfair Display',serif; font-size:0.96rem; color:var(--rust); }
+.tl-item p { font-size:0.83rem; color:var(--muted); }
+/* Special chars */
+.specials { background:var(--ink); color:var(--cream); padding:26px 28px; }
+.specials h2 { font-family:'Playfair Display',serif; font-size:1rem; color:var(--gold); margin-bottom:16px; }
+.char-row { display:flex; flex-wrap:wrap; gap:20px; }
+.char-item { text-align:center; }
+.sym { font-size:1.8rem; color:var(--gold); }
+.sym-code { font-size:0.58rem; font-family:monospace; color:#aaa; }
+
+/* ============================================================
+   PAGE 2 — MULTIMEDIA
+============================================================ */
+.gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.g-card { background:var(--white); border:2px solid var(--ink); overflow:hidden; }
+.g-card img { width:100%; height:170px; object-fit:cover; }
+.g-cap { padding:9px 13px; font-size:0.78rem; color:var(--muted); border-top:1px solid var(--border); }
+.g-cap strong { color:var(--ink); display:block; margin-bottom:2px; font-size:0.82rem; }
+.media-row { display:grid; grid-template-columns:300px 1fr; gap:20px; align-items:start; margin-bottom:18px; }
+.media-row img { width:300px; height:200px; object-fit:cover; border:2px solid var(--ink); }
+.media-info h3 { font-family:'Playfair Display',serif; font-size:1.03rem; margin-bottom:8px; }
+.media-info p { font-size:0.85rem; color:var(--muted); margin-bottom:5px; }
+.feat-img-wrap { border:2px solid var(--ink); overflow:hidden; margin-bottom:14px; }
+.feat-img-wrap img { width:100%; height:260px; object-fit:cover; }
+.feat-cap { background:var(--ink); color:var(--cream); padding:10px 14px; font-size:0.78rem; }
+.img-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+.img-strip .isc { }
+.img-strip img { width:100%; height:105px; object-fit:cover; border:1.5px solid var(--border); }
+.img-strip p { font-size:0.71rem; color:var(--muted); margin-top:3px; text-align:center; }
+
+/* ============================================================
+   PAGE 3 — LISTS
+============================================================ */
+ul.web { list-style:none; padding:0; }
+ul.web li { padding:7px 0 7px 20px; border-bottom:1px dashed #ddd; font-size:0.88rem; position:relative; }
+ul.web li:last-child { border-bottom:none; }
+ul.web li::before { content:"◆"; color:var(--gold); position:absolute; left:0; font-size:0.52rem; top:13px; }
+ul.circle { padding-left:20px; list-style-type:circle; }
+ul.circle li { padding:5px 0; font-size:0.86rem; border-bottom:1px dashed #ddd; }
+ul.circle li:last-child { border-bottom:none; }
+ul.square { padding-left:20px; list-style-type:square; }
+ul.square li { padding:5px 0; font-size:0.86rem; }
+ul.square li::marker { color:var(--rust); }
+ol.web { padding-left:22px; }
+ol.web li { padding:6px 0; border-bottom:1px dashed #ddd; font-size:0.88rem; }
+ol.web li:last-child { border-bottom:none; }
+ol.web li::marker { color:var(--rust); font-weight:700; font-family:'Playfair Display',serif; }
+ol.alpha { padding-left:22px; list-style-type:upper-alpha; }
+ol.alpha li { padding:5px 0; font-size:0.86rem; }
+ol.alpha li::marker { color:var(--ink); font-weight:700; }
+ol.roman { padding-left:26px; list-style-type:upper-roman; }
+ol.roman li { padding:5px 0; font-size:0.86rem; }
+ol.roman li::marker { color:var(--muted); }
+dl.web dt { font-family:'Playfair Display',serif; font-size:0.97rem; color:var(--ink); margin-top:12px; padding-left:7px; border-left:3px solid var(--gold); }
+dl.web dt:first-child { margin-top:0; }
+dl.web dd { font-size:0.83rem; color:var(--muted); padding:4px 0 4px 18px; line-height:1.55; }
+ul.nest { padding-left:16px; }
+ul.nest li { padding:4px 0; font-size:0.86rem; }
+ul.nest li::marker { color:var(--gold); }
+ul.nest ul { margin-top:3px; }
+ul.nest ul li::marker { color:var(--rust); }
+ul.nest ul ul li::marker { color:var(--muted); }
+
+/* ============================================================
+   PAGE 4 — TABLES
+============================================================ */
+.hl { background:#c9a84c22 !important; border:2px solid var(--gold) !important; font-weight:700; }
+
+/* ============================================================
+   PAGE 5 — FRAMES
+============================================================ */
+.frame-sim { border:3px solid var(--ink); display:grid; grid-template-rows:auto 1fr; height:460px; overflow:hidden; margin-bottom:14px; }
+.frame-top { background:var(--ink); color:var(--gold); padding:8px 16px; font-family:'Playfair Display',serif; font-size:0.8rem; display:flex; justify-content:space-between; align-items:center; }
+.frame-body { display:grid; grid-template-columns:185px 1fr; height:100%; }
+.f-sidebar { background:#eee8de; border-right:2px solid var(--ink); padding:14px; overflow-y:auto; }
+.f-sidebar h4 { font-family:'Playfair Display',serif; font-size:0.88rem; margin-bottom:9px; color:var(--rust); }
+.f-sidebar ul { list-style:none; }
+.f-sidebar ul li { padding:7px 4px; border-bottom:1px dashed #ccc; font-size:0.8rem; cursor:pointer; transition:padding .15s, color .15s; }
+.f-sidebar ul li:hover { color:var(--rust); padding-left:8px; }
+.f-content { padding:18px 22px; overflow-y:auto; }
+.f-content h3 { font-family:'Playfair Display',serif; margin-bottom:9px; }
+.f-content p { font-size:0.85rem; color:var(--muted); margin-bottom:8px; }
+.iframe-wrap { border:3px solid var(--ink); overflow:hidden; margin-bottom:12px; }
+.iframe-top { background:var(--rust); color:#fff; padding:7px 14px; font-size:0.73rem; letter-spacing:0.06em; }
+/* Lists in frames (Task 3) */
+.list-cols { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+ul.emb { list-style:none; padding:0; }
+ul.emb li { padding:6px 0 6px 16px; border-bottom:1px dashed #ddd; font-size:0.84rem; position:relative; }
+ul.emb li::before { content:"◆"; color:var(--gold); position:absolute; left:0; font-size:0.5rem; top:11px; }
+ul.emb li:last-child { border-bottom:none; }
+ol.emb { padding-left:19px; }
+ol.emb li { padding:6px 0; font-size:0.84rem; border-bottom:1px dashed #ddd; }
+ol.emb li::marker { color:var(--rust); font-weight:700; }
+ol.emb li:last-child { border-bottom:none; }
+dl.emb dt { font-weight:700; font-size:0.84rem; color:var(--ink); margin-top:9px; border-left:3px solid var(--gold); padding-left:6px; }
+dl.emb dt:first-child { margin-top:0; }
+dl.emb dd { font-size:0.78rem; color:var(--muted); padding-left:12px; line-height:1.5; }
+
+/* ============================================================
+   PAGE 6 — FORMS
+============================================================ */
+.fcard { background:var(--white); border:2px solid var(--ink); padding:28px; margin-bottom:26px; }
+.fcard h3 { font-family:'Playfair Display',serif; font-size:1.07rem; margin-bottom:18px; padding-bottom:7px; border-bottom:1px solid var(--border); }
+.fg { margin-bottom:16px; }
+label.fl { display:block; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:5px; }
+label.fl .req { color:var(--rust); }
+input[type=text], input[type=password], input[type=email], input[type=tel], select, textarea {
+  width:100%; padding:10px 12px; border:1.5px solid #c0b8a8; background:var(--cream);
+  font-family:'Source Serif 4',serif; font-size:0.9rem; color:var(--ink); outline:none;
+  transition:border-color .2s; border-radius:0;
+}
+input:focus, select:focus, textarea:focus { border-color:var(--ink); }
+input[type=file] { padding:8px 0; font-size:0.84rem; cursor:pointer; width:100%; }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.radio-g, .check-g { display:flex; flex-wrap:wrap; gap:14px; margin-top:4px; }
+.radio-g label, .check-g label { display:flex; align-items:center; gap:7px; font-size:0.88rem; color:var(--ink); cursor:pointer; text-transform:none; letter-spacing:0; }
+input[type=radio], input[type=checkbox] { width:15px; height:15px; accent-color:var(--ink); }
+textarea { resize:vertical; min-height:100px; }
+select { cursor:pointer; }
+.btn-row { display:flex; gap:12px; margin-top:22px; flex-wrap:wrap; }
+input[type=submit] {
+  background:var(--ink); color:var(--gold); border:none; padding:11px 28px;
+  font-family:'Playfair Display',serif; font-size:0.9rem; cursor:pointer; letter-spacing:0.06em;
+  transition:background .2s;
+}
+input[type=submit]:hover { background:#2d2d4e; }
+input[type=reset] {
+  background:transparent; color:var(--ink); border:2px solid var(--ink); padding:11px 28px;
+  font-family:'Playfair Display',serif; font-size:0.9rem; cursor:pointer; letter-spacing:0.06em;
+  transition:background .2s;
+}
+input[type=reset]:hover { background:#e8e0d4; }
+.form-success { display:none; background:#d4edda; border:1.5px solid #a8d5b5; color:var(--green); padding:13px 17px; margin-bottom:20px; font-size:0.9rem; }
+
+/* ============================================================
+   PAGE 7 — MCQ
+============================================================ */
+.prog-wrap { background:#e0d8cc; height:7px; border-radius:2px; margin-bottom:5px; }
+.prog-bar { background:var(--gold); height:100%; width:0%; transition:width .35s; border-radius:2px; }
+.prog-lbl { font-size:0.74rem; color:var(--muted); margin-bottom:22px; }
+.qcard { background:var(--white); border:2px solid var(--ink); padding:26px; margin-bottom:20px; position:relative; }
+.qnum { position:absolute; top:-12px; left:16px; background:var(--ink); color:var(--gold); font-family:'Playfair Display',serif; font-size:0.72rem; padding:2px 12px; letter-spacing:0.1em; }
+.qtext { font-size:0.98rem; line-height:1.55; margin-bottom:15px; padding-top:4px; }
+.opts { display:flex; flex-direction:column; gap:8px; }
+.opt { display:flex; align-items:center; gap:10px; padding:10px 13px; border:1.5px solid var(--border); cursor:pointer; transition:border-color .13s, background .13s; font-size:0.89rem; user-select:none; }
+.opt:hover { border-color:var(--ink); background:#f8f4ee; }
+.opt.correct { border-color:var(--green) !important; background:#eafaf1 !important; }
+.opt.wrong   { border-color:var(--rust) !important;  background:#fdf1f0 !important; }
+.opt.correct .ol { background:var(--green); color:#fff; }
+.opt.wrong   .ol { background:var(--rust);  color:#fff; }
+.ol { width:22px; height:22px; border-radius:50%; background:#e8e0d4; color:var(--ink); display:flex; align-items:center; justify-content:center; font-size:0.66rem; font-weight:700; flex-shrink:0; }
+.fb { font-size:0.78rem; margin-top:9px; padding:8px 11px; display:none; }
+.fb.show { display:block; }
+.fb.correct { background:#eafaf1; color:var(--green); border:1px solid #b8ddc8; }
+.fb.wrong   { background:#fdf1f0; color:var(--rust);  border:1px solid #f0c8c4; }
+.q-ctrls { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:8px; }
+.btn { padding:10px 24px; border:none; cursor:pointer; font-family:'Playfair Display',serif; font-size:0.88rem; letter-spacing:0.05em; transition:background .2s; }
+.btn-p { background:var(--ink); color:var(--gold); }
+.btn-p:hover { background:#2d2d4e; }
+.btn-s { background:transparent; border:2px solid var(--ink); color:var(--ink); }
+.btn-s:hover { background:#e8e0d4; }
+#score-panel { display:none; background:var(--white); border:2px solid var(--ink); padding:38px; text-align:center; margin-top:22px; }
+#score-panel h2 { font-family:'Playfair Display',serif; font-size:1.8rem; margin-bottom:7px; }
+.snum { font-family:'Playfair Display',serif; font-size:3.2rem; color:var(--gold); }
+.ssub { color:var(--muted); font-size:0.85rem; margin-top:4px; }
+.sgrade { font-size:1.05rem; margin-top:12px; }
+.badge { display:inline-block; padding:5px 18px; font-size:0.8rem; letter-spacing:0.08em; margin-top:12px; }
+.bg  { background:var(--gold); color:var(--ink); }
+.bs2 { background:#9e9e9e; color:#fff; }
+.bb  { background:#b07030; color:#fff; }
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.site-footer {
+  border-top: 2.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--cream);
+  text-align: center;
+  padding: 22px;
+  font-size: 0.73rem;
+  letter-spacing: 0.06em;
+}
+.site-footer span { color: var(--gold); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-img { height: 200px; }
+  .intro-grid { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: 1fr 1fr; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .list-cols { grid-template-columns: 1fr; }
+  .row2 { grid-template-columns: 1fr; }
+  .media-row { grid-template-columns: 1fr; }
+  .media-row img { width: 100%; height: 200px; }
+  .frame-body { grid-template-columns: 1fr; }
+  .f-sidebar { display: none; }
+  .img-strip { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .main-nav .nav-brand { display: none; }
+  .main-nav button { padding: 12px 10px; font-size: 0.64rem; letter-spacing: 0.06em; }
+  .gallery { grid-template-columns: 1fr; }
+  .img-strip { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ TOP BAR ══════════ -->
+<div class="topbar">Web Technologies &nbsp;·&nbsp; Task 02.03.2026 &nbsp;·&nbsp; HTML Fundamentals Project</div>
+
+<!-- ══════════ NAV ══════════ -->
+<nav class="main-nav" id="mainNav">
+  <span class="nav-brand">WebTech</span>
+  <button onclick="showPage('home')"       class="active" id="btn-home">Home</button>
+  <button onclick="showPage('multimedia')"          id="btn-multimedia">Multimedia</button>
+  <button onclick="showPage('lists')"               id="btn-lists">Lists</button>
+  <button onclick="showPage('tables')"              id="btn-tables">Tables</button>
+  <button onclick="showPage('frames')"              id="btn-frames">Frames</button>
+  <button onclick="showPage('forms')"               id="btn-forms">Forms</button>
+  <button onclick="showPage('mcq')"                 id="btn-mcq">MCQ Quiz</button>
+</nav>
+
+<!-- ══════════ MARQUEE ══════════ -->
+<div class="marquee-bar">
+  <marquee behavior="scroll" direction="left" scrollamount="5">
+    ★ Welcome to the Web Technologies Project! &nbsp;|&nbsp; HTML · CSS · JavaScript · HTTP · Multimedia · Lists · Tables · Frames · Forms · MCQ Quiz &nbsp;|&nbsp; Task 02.03.2026 &nbsp;★
+  </marquee>
+</div>
+
+
+<!-- ████████████████████████████████████████████
+     PAGE 1 — HOME
+████████████████████████████████████████████ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-text">
+      <div class="kicker">Task 02.03.2026 &nbsp;·&nbsp; Edition I</div>
+      <h1>The World of <em>Web Technologies</em></h1>
+      <p>From Tim Berners-Lee's first HTML page in 1991 to today's Progressive Web Apps, web technologies power every website, application and service you use online. This project covers HTML structure, text formatting, multimedia, lists, tables, frames, forms and more.</p>
+      <br>
+      <p>Click the navigation tabs above to explore each section.</p>
+    </div>
+    <div class="hero-img">
+      <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=840&q=80"
+           alt="Colourful programming code on a monitor — web development workspace"
+           title="Web Technologies — code on a monitor">
+    </div>
+  </div>
+
+  <!-- 3-col intro strip -->
+  <div class="intro-grid">
+    <div class="intro-col">
+      <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&q=80"
+           alt="HTML code structure on a screen" title="HTML — structure of the web">
+      <h3>HTML — Structure</h3>
+      <p>HyperText Markup Language defines the skeleton of every web page using a system of nested elements and tags.</p>
+    </div>
+    <div class="intro-col">
+      <img src="https://images.unsplash.com/photo-1523437113738-bbd3cc89fb19?w=600&q=80"
+           alt="CSS design styling on a laptop screen" title="CSS — presentation layer">
+      <h3>CSS — Presentation</h3>
+      <p>Cascading Style Sheets control colours, fonts, spacing, layout and responsive behaviour of HTML elements.</p>
+    </div>
+    <div class="intro-col">
+      <img src="https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=600&q=80"
+           alt="JavaScript code in a code editor" title="JavaScript — behaviour and interactivity">
+      <h3>JavaScript — Behaviour</h3>
+      <p>JavaScript adds interactivity, dynamic content and application logic to web pages, running inside the browser.</p>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- About -->
+    <div class="sec">
+      <h2 class="sh">What Are Web Technologies?</h2>
+      <div class="grid-2">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80"
+             alt="Developer working on a web project at a laptop"
+             style="height:220px;object-fit:cover;border:2px solid var(--ink);">
+        <div>
+          <h3 style="font-family:'Playfair Display',serif;margin-bottom:10px;">Building the Modern Web</h3>
+          <p style="font-size:0.88rem;color:var(--muted);margin-bottom:9px;">Web technologies are standardised languages, protocols and tools that allow developers to create websites and web applications accessible through a browser over the internet.</p>
+          <p style="font-size:0.88rem;color:var(--muted);margin-bottom:9px;">The three core <strong>front-end</strong> technologies are <b>HTML</b> (structure), <b>CSS</b> (style) and <b>JavaScript</b> (behaviour). Together they form the foundation of every webpage.</p>
+          <p style="font-size:0.88rem;color:var(--muted);margin-bottom:9px;">On the server side, <b>PHP</b>, <b>Python</b> and <b>Node.js</b> process requests and interact with databases (<b>MySQL</b>, <b>MongoDB</b>) to serve dynamic content.</p>
+          <p style="font-size:0.88rem;color:var(--muted);">Communication happens over <b>HTTP</b> and <b>HTTPS</b> — protocols defining how browsers and servers exchange data securely.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Formatting Tags -->
+    <div class="sec">
+      <h2 class="sh">HTML Text Formatting Tags — Live Demonstration</h2>
+      <div class="fmt-box">
+        <b>Bold &lt;b&gt;</b> — visual emphasis, no extra semantic meaning.<br>
+        <i>Italic &lt;i&gt;</i> — stylistic slant for titles, foreign terms, technical words.<br>
+        <u>Underline &lt;u&gt;</u> — draws a line beneath the text to highlight it.<br>
+        <strong>Strong &lt;strong&gt;</strong> — bold with semantic importance; screen readers stress it.<br>
+        <em>Emphasis &lt;em&gt;</em> — italic with semantic stress, used for accessibility.<br>
+        <small>Small &lt;small&gt; — one font size smaller; used for disclaimers and fine print.</small><br>
+        <big>Big &lt;big&gt; — one font size larger; draws attention to key terms.</big><br>
+        <tt>Teletype &lt;tt&gt; — monospace font, like terminal or typewriter output.</tt><br>
+        <strike>Strikethrough &lt;strike&gt; — horizontal line marks deleted or outdated content.</strike><br>
+        Chemical formula: H<sub>2</sub>O and CO<sub>2</sub> — subscript <code>&lt;sub&gt;</code> lowers numerals below the baseline.<br>
+        Einstein's equation: E=mc<sup>2</sup> — superscript <code>&lt;sup&gt;</code> raises numerals above the baseline.<br>
+        <font color="#c0392b" face="Georgia" size="4">Font tag &lt;font&gt; — legacy attribute for colour, face &amp; size (deprecated in HTML5).</font>
+      </div>
+      <div class="tag-grid">
+        <div class="tag-card"><span class="tn">&lt;b&gt;</span><p>Bold — visual only</p><div class="td"><b>Web Development</b></div></div>
+        <div class="tag-card"><span class="tn">&lt;i&gt;</span><p>Italic — stylistic slant</p><div class="td"><i>HTML &amp; CSS Guide</i></div></div>
+        <div class="tag-card"><span class="tn">&lt;u&gt;</span><p>Underline text</p><div class="td"><u>Click here to learn</u></div></div>
+        <div class="tag-card"><span class="tn">&lt;strong&gt;</span><p>Semantic bold</p><div class="td"><strong>Critical concept!</strong></div></div>
+        <div class="tag-card"><span class="tn">&lt;em&gt;</span><p>Semantic italic</p><div class="td"><em>Always validate HTML</em></div></div>
+        <div class="tag-card"><span class="tn">&lt;small&gt;</span><p>Smaller text size</p><div class="td">Normal <small>fine print</small></div></div>
+        <div class="tag-card"><span class="tn">&lt;big&gt;</span><p>Larger text size</p><div class="td">Normal <big>big text</big></div></div>
+        <div class="tag-card"><span class="tn">&lt;tt&gt;</span><p>Monospace / teletype</p><div class="td"><tt>index.html</tt></div></div>
+        <div class="tag-card"><span class="tn">&lt;strike&gt;</span><p>Strikethrough</p><div class="td"><strike>Deprecated API</strike></div></div>
+        <div class="tag-card"><span class="tn">&lt;sub&gt;</span><p>Subscript</p><div class="td">H<sub>2</sub>O &nbsp; CO<sub>2</sub></div></div>
+        <div class="tag-card"><span class="tn">&lt;sup&gt;</span><p>Superscript</p><div class="td">x<sup>2</sup>+y<sup>2</sup>=r<sup>2</sup></div></div>
+        <div class="tag-card"><span class="tn">&lt;font&gt;</span><p>Legacy colour/face/size</p><div class="td"><font color="#c9a84c">Gold styled text</font></div></div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="sec">
+      <h2 class="sh">Brief History of Web Technologies</h2>
+      <div class="grid-2">
+        <div class="tl">
+          <div class="tl-item"><div class="tl-year">1989–1991</div><p>Tim Berners-Lee proposes the World Wide Web at CERN and publishes the first HTML document and web server.</p></div>
+          <div class="tl-item"><div class="tl-year">1993</div><p>NCSA Mosaic launches — the first graphical web browser, making the web accessible to mainstream users.</p></div>
+          <div class="tl-item"><div class="tl-year">1994</div><p>W3C (World Wide Web Consortium) is founded to develop open, universal web standards.</p></div>
+          <div class="tl-item"><div class="tl-year">1995</div><p>JavaScript is created by Brendan Eich at Netscape, adding scripting capability to web pages.</p></div>
+          <div class="tl-item"><div class="tl-year">1996</div><p>CSS1 is released, cleanly separating content structure from visual presentation.</p></div>
+          <div class="tl-item"><div class="tl-year">1997</div><p>HTML 4.0 formalises tables, forms, frames and improved multimedia support.</p></div>
+          <div class="tl-item"><div class="tl-year">2004</div><p>WHATWG begins work on HTML5, creating a web application platform without plug-ins.</p></div>
+          <div class="tl-item"><div class="tl-year">2014</div><p>HTML5 officially standardised — native &lt;video&gt;, &lt;audio&gt;, &lt;canvas&gt; and semantic elements.</p></div>
+          <div class="tl-item"><div class="tl-year">2026</div><p>Progressive Web Apps, WebAssembly and AI-driven interfaces define the modern web landscape.</p></div>
+        </div>
+        <div>
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=700&q=80"
+               alt="Server racks in a data centre powering the internet"
+               style="width:100%;height:260px;object-fit:cover;border:2px solid var(--ink);">
+          <p style="font-size:0.74rem;color:var(--muted);margin-top:5px;text-align:center;">Modern data centres serve billions of web requests every second.</p>
+          <br>
+          <img src="https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=700&q=80"
+               alt="Laptop with GitHub code repository on screen"
+               style="width:100%;height:150px;object-fit:cover;border:2px solid var(--ink);">
+          <p style="font-size:0.74rem;color:var(--muted);margin-top:5px;text-align:center;">Git &amp; GitHub underpin collaborative web development worldwide.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Special Characters -->
+    <div class="specials">
+      <h2>Special Characters — HTML Entities</h2>
+      <div class="char-row">
+        <div class="char-item"><div class="sym">&copy;</div><div class="sym-code">&amp;copy;</div></div>
+        <div class="char-item"><div class="sym">&reg;</div><div class="sym-code">&amp;reg;</div></div>
+        <div class="char-item"><div class="sym">&#169;</div><div class="sym-code">&amp;#169;</div></div>
+        <div class="char-item"><div class="sym">&trade;</div><div class="sym-code">&amp;trade;</div></div>
+        <div class="char-item"><div class="sym">&euro;</div><div class="sym-code">&amp;euro;</div></div>
+        <div class="char-item"><div class="sym">&pound;</div><div class="sym-code">&amp;pound;</div></div>
+        <div class="char-item"><div class="sym">&amp;</div><div class="sym-code">&amp;amp;</div></div>
+        <div class="char-item"><div class="sym">&lt;</div><div class="sym-code">&amp;lt;</div></div>
+        <div class="char-item"><div class="sym">&gt;</div><div class="sym-code">&amp;gt;</div></div>
+        <div class="char-item"><div class="sym">&mdash;</div><div class="sym-code">&amp;mdash;</div></div>
+        <div class="char-item"><div class="sym">&frac12;</div><div class="sym-code">&amp;frac12;</div></div>
+        <div class="char-item"><div class="sym">&deg;</div><div class="sym-code">&amp;deg;</div></div>
+        <div class="char-item"><div class="sym">&plusmn;</div><div class="sym-code">&amp;plusmn;</div></div>
+        <div class="char-item"><div class="sym">&#9733;</div><div class="sym-code">&amp;#9733;</div></div>
+        <div class="char-item"><div class="sym">&infin;</div><div class="sym-code">&amp;infin;</div></div>
+      </div>
+    </div>
+
+  </div><!-- /page-wrap -->
+</div><!-- /page-home -->
+
+
+<!-- ████████████████████████████████████████████
+     PAGE 2 — MULTIMEDIA
+████████████████████████████████████████████ -->
+<div id="page-multimedia" class="page">
+  <div class="ph">
+    <h1><em>Multimedia</em> in Web Technologies</h1>
+    <p>Images, audio, video and interactive content — the visual building blocks of the modern web.</p>
+  </div>
+  <div class="page-wrap">
+
+    <div class="sec">
+      <h2 class="sh">1. Hero Image — Full-Width Banner</h2>
+      <span class="lbl">&lt;img src alt width height title&gt;</span>
+      <div class="feat-img-wrap">
+        <img src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=1200&q=80"
+             alt="Web technology concept — laptop with code and network connections"
+             width="1200" height="260" title="Web Technology — code and connectivity">
+      </div>
+      <div class="feat-cap">
+        <strong>Figure 1:</strong> Developer workspace — the starting point of every website. &nbsp;|&nbsp;
+        <code>src</code>: URL &nbsp;·&nbsp; <code>alt</code>: "Web technology concept…" &nbsp;·&nbsp; <code>width</code>: 1200 &nbsp;·&nbsp; <code>height</code>: 260
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sh">2. Web Technologies Photo Gallery</h2>
+      <span class="lbl">&lt;img&gt; — all with alt, width, height, title</span>
+      <div class="gallery">
+        <div class="g-card">
+          <img src="https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=500&q=80"
+               alt="HTML and CSS code displayed in a modern code editor" width="500" height="170" title="HTML &amp; CSS">
+          <div class="g-cap"><strong>HTML &amp; CSS</strong>Structure &amp; style — the two pillars of every web page.</div>
+        </div>
+        <div class="g-card">
+          <img src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?w=500&q=80"
+               alt="JavaScript code running in a browser developer console" width="500" height="170" title="JavaScript">
+          <div class="g-cap"><strong>JavaScript</strong>Scripting language that adds logic and interactivity.</div>
+        </div>
+        <div class="g-card">
+          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=500&q=80"
+               alt="Network cables and server hardware — internet infrastructure" width="500" height="170" title="Internet Infrastructure">
+          <div class="g-cap"><strong>Internet Infrastructure</strong>Servers and cables powering the global web.</div>
+        </div>
+        <div class="g-card">
+          <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=500&q=80"
+               alt="Responsive web design on multiple devices — desktop, tablet, phone" width="500" height="170" title="Responsive Design">
+          <div class="g-cap"><strong>Responsive Design</strong>One HTML file adapts to all screen sizes.</div>
+        </div>
+        <div class="g-card">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&q=80"
+               alt="Database rows and SQL query — backend web data storage" width="500" height="170" title="SQL Database">
+          <div class="g-cap"><strong>SQL &amp; Databases</strong>MySQL stores the dynamic content delivered to users.</div>
+        </div>
+        <div class="g-card">
+          <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=500&q=80"
+               alt="Cybersecurity padlock — HTTPS and web encryption" width="500" height="170" title="HTTPS Security">
+          <div class="g-cap"><strong>HTTPS &amp; Security</strong>SSL/TLS encrypts data between browser and server.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sh">3. Images with Explicit Size Attributes</h2>
+      <div class="grid-2">
+        <div>
+          <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80"
+               alt="Laptop showing web development code" width="600" height="200"
+               title="Web Development — width=600 height=200"
+               style="width:100%;height:200px;object-fit:cover;border:2px solid var(--ink);">
+          <p style="font-size:0.76rem;color:var(--muted);margin-top:5px;">Fixed: <code>width="600" height="200"</code> — developer coding a website.</p>
+        </div>
+        <div>
+          <img src="https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?w=300&q=80"
+               alt="Web design wireframe sketch thumbnail" width="300" height="200"
+               title="Wireframe thumbnail — 300×200"
+               style="width:100%;height:200px;object-fit:cover;border:2px solid var(--ink);">
+          <p style="font-size:0.76rem;color:var(--muted);margin-top:5px;">Fixed: <code>width="300" height="200"</code> — wireframe thumbnail.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sh">4. &lt;img&gt; Tag — Full Attribute Reference</h2>
+      <table>
+        <thead><tr><th>Attribute</th><th>Value Example</th><th>Purpose</th><th>Required?</th></tr></thead>
+        <tbody>
+          <tr><td><code>src</code></td><td><code>"photo.jpg"</code></td><td>URL or path to the image file</td><td>Yes</td></tr>
+          <tr><td><code>alt</code></td><td><code>"A mountain landscape"</code></td><td>Text shown if image fails; used by screen readers and SEO</td><td>Yes</td></tr>
+          <tr><td><code>width</code></td><td><code>"400"</code> or <code>"100%"</code></td><td>Display width in pixels or percentage</td><td>Recommended</td></tr>
+          <tr><td><code>height</code></td><td><code>"260"</code></td><td>Display height in pixels — prevents layout shift</td><td>Recommended</td></tr>
+          <tr><td><code>title</code></td><td><code>"Hover tooltip text"</code></td><td>Tooltip shown when user hovers over the image</td><td>No</td></tr>
+          <tr><td><code>border</code></td><td><code>"2"</code></td><td>Pixel border around the image (legacy)</td><td>No</td></tr>
+          <tr><td><code>align</code></td><td><code>"left"</code>, <code>"right"</code></td><td>Wrapping alignment relative to text (legacy)</td><td>No</td></tr>
+          <tr><td><code>loading</code></td><td><code>"lazy"</code></td><td>Defers loading until image is near the viewport</td><td>No</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec">
+      <h2 class="sh">5. HTML5 Audio &amp; Video Elements</h2>
+      <div class="grid-2">
+        <div class="box">
+          <h3>🎥 &lt;video&gt; Element</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:10px;">HTML5 native video player — no plug-ins needed. Supports MP4, WebM, Ogg.</p>
+          <pre>&lt;video width="640" height="360"
+  controls autoplay muted loop&gt;
+  &lt;source src="intro.mp4"
+          type="video/mp4"&gt;
+  Your browser does not
+  support video.
+&lt;/video&gt;</pre>
+        </div>
+        <div class="box">
+          <h3>🎵 &lt;audio&gt; Element</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:10px;">HTML5 native audio player. Supports MP3, WAV, Ogg. The <code>controls</code> attribute shows a play bar.</p>
+          <pre>&lt;audio controls&gt;
+  &lt;source src="sound.mp3"
+          type="audio/mpeg"&gt;
+  &lt;source src="sound.ogg"
+          type="audio/ogg"&gt;
+  Your browser does not
+  support audio.
+&lt;/audio&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ████████████████████████████████████████████
+     PAGE 3 — LISTS
+████████████████████████████████████████████ -->
+<div id="page-lists" class="page">
+  <div class="ph">
+    <h1>HTML <em>Lists</em></h1>
+    <p>Unordered, ordered and definition lists — organising web content clearly and semantically.</p>
+  </div>
+  <div class="page-wrap">
+
+    <div class="img-strip">
+      <div class="isc">
+        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=80" alt="Developer listing web technologies on a laptop">
+        <p>Organising tech stacks</p>
+      </div>
+      <div class="isc">
+        <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&q=80" alt="HTML list elements in a code editor">
+        <p>HTML list tags in code</p>
+      </div>
+      <div class="isc">
+        <img src="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=400&q=80" alt="Web project checklist on a whiteboard">
+        <p>Project steps &amp; checklists</p>
+      </div>
+    </div>
+
+    <!-- UL -->
+    <div class="sec">
+      <h2 class="sh">1. Unordered Lists &lt;ul&gt;</h2>
+      <p style="font-size:0.87rem;color:var(--muted);margin-bottom:16px;">The <code>&lt;ul&gt;</code> tag creates a bulleted list where items have no specific order. The <code>list-style-type</code> sets the bullet: <code>disc</code>, <code>circle</code>, <code>square</code> or <code>none</code>.</p>
+      <div class="grid-3">
+        <div class="box">
+          <h3>Front-End Technologies</h3>
+          <span class="lbl">custom ◆ bullets</span>
+          <ul class="web">
+            <li>HTML5 — HyperText Markup Language</li>
+            <li>CSS3 — Cascading Style Sheets</li>
+            <li>JavaScript (ES2024)</li>
+            <li>TypeScript — typed JavaScript</li>
+            <li>React — UI component library</li>
+            <li>Vue.js — progressive framework</li>
+            <li>Angular — full MVC framework</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Back-End Technologies</h3>
+          <span class="lbl">list-style-type: circle</span>
+          <ul class="circle">
+            <li>Node.js — JS on the server</li>
+            <li>PHP — server-side scripting</li>
+            <li>Python / Django / Flask</li>
+            <li>Ruby on Rails</li>
+            <li>Java Spring Boot</li>
+            <li>ASP.NET Core (C#)</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Web Protocols &amp; Standards</h3>
+          <span class="lbl">list-style-type: square</span>
+          <ul class="square">
+            <li>HTTP / HTTPS</li>
+            <li>TCP / IP</li>
+            <li>DNS — Domain Name System</li>
+            <li>FTP — File Transfer Protocol</li>
+            <li>WebSockets — real-time comms</li>
+            <li>REST &amp; GraphQL APIs</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- OL -->
+    <div class="sec">
+      <h2 class="sh">2. Ordered Lists &lt;ol&gt;</h2>
+      <p style="font-size:0.87rem;color:var(--muted);margin-bottom:16px;">The <code>&lt;ol&gt;</code> tag creates a numbered list. The <code>type</code> attribute sets the numbering style: <code>1</code>, <code>A</code>, <code>a</code>, <code>I</code>, <code>i</code>.</p>
+      <div class="grid-3">
+        <div class="box">
+          <h3>Steps to Build a Website</h3>
+          <span class="lbl">type="1" numeric</span>
+          <ol class="web">
+            <li>Define purpose &amp; audience</li>
+            <li>Plan sitemap &amp; structure</li>
+            <li>Create wireframes &amp; mockups</li>
+            <li>Write the HTML skeleton</li>
+            <li>Apply CSS styles &amp; layout</li>
+            <li>Add JavaScript interactivity</li>
+            <li>Test across browsers &amp; devices</li>
+            <li>Optimise performance &amp; SEO</li>
+            <li>Deploy to web hosting</li>
+            <li>Monitor and maintain</li>
+          </ol>
+        </div>
+        <div class="box">
+          <h3>HTTP Request–Response Cycle</h3>
+          <span class="lbl">type="A" uppercase alpha</span>
+          <ol class="alpha">
+            <li>User types URL in browser</li>
+            <li>Browser queries DNS for IP</li>
+            <li>Browser opens TCP connection</li>
+            <li>Browser sends HTTP GET request</li>
+            <li>Server processes the request</li>
+            <li>Server sends 200 OK response</li>
+            <li>Browser receives HTML/CSS/JS</li>
+            <li>Browser renders the web page</li>
+          </ol>
+        </div>
+        <div class="box">
+          <h3>HTML Standards Evolution</h3>
+          <span class="lbl">type="I" roman numerals</span>
+          <ol class="roman">
+            <li>HTML 1.0 — 1991</li>
+            <li>HTML 2.0 — 1995</li>
+            <li>HTML 3.2 — 1997</li>
+            <li>HTML 4.01 — 1999</li>
+            <li>XHTML 1.0 — 2000</li>
+            <li>HTML5 — 2014</li>
+            <li>HTML Living Standard — ongoing</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- DL -->
+    <div class="sec">
+      <h2 class="sh">3. Definition Lists &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</h2>
+      <p style="font-size:0.87rem;color:var(--muted);margin-bottom:16px;"><code>&lt;dl&gt;</code> is the container, <code>&lt;dt&gt;</code> is the term, <code>&lt;dd&gt;</code> is the description. Ideal for glossaries and key–value pairs.</p>
+      <div class="grid-2">
+        <div class="box">
+          <h3>Web Technologies Glossary — A</h3>
+          <dl class="web">
+            <dt>HTML</dt><dd>HyperText Markup Language — the standard language for structuring web content using elements and tags.</dd>
+            <dt>CSS</dt><dd>Cascading Style Sheets — describes visual presentation: layout, colours, fonts and responsive behaviour.</dd>
+            <dt>JavaScript</dt><dd>A lightweight scripting language enabling dynamic, interactive content running natively in every modern browser.</dd>
+            <dt>HTTP</dt><dd>HyperText Transfer Protocol — defines how messages are formatted and transmitted between browser and server.</dd>
+            <dt>HTTPS</dt><dd>HTTP Secure — HTTP encrypted with SSL/TLS, protecting data from eavesdropping and tampering.</dd>
+            <dt>DNS</dt><dd>Domain Name System — translates domain names (e.g. www.example.com) into numeric IP addresses.</dd>
+          </dl>
+        </div>
+        <div class="box">
+          <h3>Web Technologies Glossary — B</h3>
+          <dl class="web">
+            <dt>URL</dt><dd>Uniform Resource Locator — the address for accessing a web resource, made of protocol, domain and path.</dd>
+            <dt>DOM</dt><dd>Document Object Model — a tree-based programming interface representing an HTML document that scripts can manipulate.</dd>
+            <dt>API</dt><dd>Application Programming Interface — rules allowing software systems to communicate, e.g. REST or GraphQL.</dd>
+            <dt>Responsive Design</dt><dd>Web design approach using fluid grids and media queries to display correctly on all screen sizes.</dd>
+            <dt>SEO</dt><dd>Search Engine Optimisation — techniques improving a website's ranking in search engine results pages.</dd>
+            <dt>CMS</dt><dd>Content Management System — software allowing non-technical users to publish web content (e.g. WordPress).</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nested -->
+    <div class="sec">
+      <h2 class="sh">4. Nested Lists</h2>
+      <div class="grid-2">
+        <div class="box">
+          <h3>Web Development Technology Stack</h3>
+          <ul class="nest">
+            <li><strong>Frontend</strong>
+              <ul class="nest"><li>HTML5 — Semantic tags, Forms, Canvas</li><li>CSS3 — Flexbox, Grid, Animations</li><li>JavaScript — React, Vue, TypeScript</li></ul>
+            </li>
+            <li><strong>Backend</strong>
+              <ul class="nest"><li>Node.js / PHP / Python</li><li>REST APIs &amp; GraphQL</li><li>Authentication (JWT, OAuth)</li></ul>
+            </li>
+            <li><strong>Database</strong>
+              <ul class="nest"><li>MySQL (relational)</li><li>MongoDB (document)</li><li>Redis (caching)</li></ul>
+            </li>
+            <li><strong>DevOps</strong>
+              <ul class="nest"><li>Git &amp; GitHub</li><li>Docker &amp; Kubernetes</li><li>Cloud: AWS / Azure / GCP</li></ul>
+            </li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>HTTP Status Code Categories</h3>
+          <ol style="padding-left:20px;">
+            <li><strong>1xx — Informational</strong><ul class="nest" style="margin-top:3px;"><li>100 Continue</li><li>101 Switching Protocols</li></ul></li>
+            <li><strong>2xx — Success</strong><ul class="nest" style="margin-top:3px;"><li>200 OK</li><li>201 Created</li><li>204 No Content</li></ul></li>
+            <li><strong>3xx — Redirection</strong><ul class="nest" style="margin-top:3px;"><li>301 Moved Permanently</li><li>302 Found</li></ul></li>
+            <li><strong>4xx — Client Errors</strong><ul class="nest" style="margin-top:3px;"><li>400 Bad Request</li><li>401 Unauthorised</li><li>403 Forbidden</li><li>404 Not Found</li></ul></li>
+            <li><strong>5xx — Server Errors</strong><ul class="nest" style="margin-top:3px;"><li>500 Internal Server Error</li><li>503 Service Unavailable</li></ul></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ████████████████████████████████████████████
+     PAGE 4 — TABLES
+████████████████████████████████████████████ -->
+<div id="page-tables" class="page">
+  <div class="ph">
+    <h1>HTML <em>Tables</em> &amp; Multimedia</h1>
+    <p>Structured data with HTML tables — plus embedded multimedia (Task 2 included here).</p>
+  </div>
+  <div class="page-wrap">
+
+    <!-- Multimedia Task 2 -->
+    <div class="sec">
+      <h2 class="sh">Task 2 — Multimedia (&lt;img&gt; embedded in Tables page)</h2>
+      <span class="lbl">&lt;img src alt width height title&gt;</span>
+      <div class="media-row">
+        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?w=640&q=80"
+             alt="Students learning web technologies in a computer lab"
+             width="300" height="200" title="Web Technologies — classroom learning">
+        <div class="media-info">
+          <h3>Web Technologies in Education</h3>
+          <p>This image uses the <code>&lt;img&gt;</code> tag with all required and recommended attributes.</p>
+          <p><strong>src:</strong> External Unsplash URL</p>
+          <p><strong>alt:</strong> "Students learning web technologies in a computer lab"</p>
+          <p><strong>width:</strong> 300 &nbsp;·&nbsp; <strong>height:</strong> 200 &nbsp;·&nbsp; <strong>title:</strong> "Web Technologies — classroom learning" (tooltip on hover)</p>
+        </div>
+      </div>
+      <div class="img-strip">
+        <div class="isc">
+          <img src="https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400&q=80" alt="HTML and CSS code in code editor" width="400" height="105">
+          <p>HTML &amp; CSS — <code>width="400"</code></p>
+        </div>
+        <div class="isc">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&q=80" alt="SQL database rows and query" width="400" height="105">
+          <p>SQL Database — <code>alt="SQL database..."</code></p>
+        </div>
+        <div class="isc">
+          <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400&q=80" alt="HTTPS padlock cybersecurity web" width="400" height="105">
+          <p>HTTPS Security — <code>title="HTTPS padlock"</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table 1 -->
+    <div class="sec">
+      <h2 class="sh">1. HTML Tags Reference Table</h2>
+      <table>
+        <caption>Commonly used HTML tags with category and description</caption>
+        <thead><tr><th>Tag</th><th>Category</th><th>Description</th><th>HTML5?</th></tr></thead>
+        <tbody>
+          <tr><td><code>&lt;html&gt;</code></td><td>Document</td><td>Root element wrapping the entire HTML document</td><td>Yes</td></tr>
+          <tr><td><code>&lt;head&gt;</code></td><td>Document</td><td>Contains metadata: title, charset, CSS &amp; JS links</td><td>Yes</td></tr>
+          <tr><td><code>&lt;body&gt;</code></td><td>Document</td><td>All visible page content lives here</td><td>Yes</td></tr>
+          <tr><td><code>&lt;h1&gt;–&lt;h6&gt;</code></td><td>Heading</td><td>Six heading levels — h1 is most important for SEO</td><td>Yes</td></tr>
+          <tr><td><code>&lt;a&gt;</code></td><td>Link</td><td>Anchor — creates hyperlinks using href, target, rel</td><td>Yes</td></tr>
+          <tr><td><code>&lt;img&gt;</code></td><td>Media</td><td>Self-closing image tag. Requires src and alt attributes</td><td>Yes</td></tr>
+          <tr><td><code>&lt;video&gt;</code></td><td>Media</td><td>HTML5 native video player with controls, autoplay, loop</td><td>HTML5</td></tr>
+          <tr><td><code>&lt;audio&gt;</code></td><td>Media</td><td>HTML5 native audio player — replaces Flash</td><td>HTML5</td></tr>
+          <tr><td><code>&lt;table&gt;</code></td><td>Table</td><td>Container for a data table</td><td>Yes</td></tr>
+          <tr><td><code>&lt;form&gt;</code></td><td>Form</td><td>Wraps form controls; action, method, enctype</td><td>Yes</td></tr>
+          <tr><td><code>&lt;nav&gt;</code></td><td>Semantic</td><td>Navigation section — improves SEO &amp; accessibility</td><td>HTML5</td></tr>
+          <tr><td><code>&lt;article&gt;</code></td><td>Semantic</td><td>Self-contained content block (blog post, news)</td><td>HTML5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table 2: colspan/rowspan -->
+    <div class="sec">
+      <h2 class="sh">2. Full-Stack Web Tech — colspan &amp; rowspan</h2>
+      <table>
+        <thead>
+          <tr><th colspan="4" style="text-align:center;">Full-Stack Web Technology Overview</th></tr>
+          <tr><th>Layer</th><th>Technology</th><th>Language / Tool</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td rowspan="4" class="hl" style="text-align:center;vertical-align:middle;">FRONT-END</td><td>Structure</td><td>HTML5</td><td>Defines page content and semantics</td></tr>
+          <tr><td>Style</td><td>CSS3 / Sass</td><td>Controls visual appearance and layout</td></tr>
+          <tr><td>Behaviour</td><td>JavaScript / TypeScript</td><td>Adds interactivity and dynamic content</td></tr>
+          <tr><td>Framework</td><td>React / Vue / Angular</td><td>Component-based UI development</td></tr>
+          <tr><td rowspan="3" class="hl" style="text-align:center;vertical-align:middle;">BACK-END</td><td>Server Language</td><td>Node.js / PHP / Python</td><td>Business logic &amp; data processing</td></tr>
+          <tr><td>API Layer</td><td>REST / GraphQL</td><td>Client–server data communication</td></tr>
+          <tr><td>Authentication</td><td>JWT / OAuth 2.0</td><td>User identity &amp; access control</td></tr>
+          <tr><td rowspan="2" class="hl" style="text-align:center;vertical-align:middle;">DATABASE</td><td>Relational</td><td>MySQL / PostgreSQL</td><td>Structured data with SQL</td></tr>
+          <tr><td>NoSQL</td><td>MongoDB / Redis</td><td>Flexible documents &amp; caching</td></tr>
+          <tr><td class="hl" style="text-align:center;">PROTOCOL</td><td colspan="2" style="text-align:center;">HTTP 1.1 / HTTP/2 / HTTPS (TLS)</td><td>Browser–server communication layer</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table 3: Course schedule -->
+    <div class="sec">
+      <h2 class="sh">3. Web Technologies Course Schedule</h2>
+      <table>
+        <thead><tr><th>Week</th><th>Topic</th><th>Key Tags / Concepts</th><th>Task</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Introduction to HTML</td><td><code>&lt;html&gt; &lt;head&gt; &lt;body&gt; &lt;title&gt;</code></td><td>Create a simple webpage</td></tr>
+          <tr><td>2</td><td>Text Formatting &amp; Special Chars</td><td><code>&lt;b&gt; &lt;i&gt; &lt;u&gt; &lt;strong&gt; &lt;sub&gt; &lt;sup&gt;</code></td><td>Home page (Task 02.03.2026)</td></tr>
+          <tr><td>3</td><td>Multimedia — Images, Video, Audio</td><td><code>&lt;img&gt; &lt;video&gt; &lt;audio&gt;</code></td><td>Multimedia page</td></tr>
+          <tr><td>4</td><td>Lists — UL, OL, DL</td><td><code>&lt;ul&gt; &lt;ol&gt; &lt;li&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</code></td><td>Lists page</td></tr>
+          <tr><td>5</td><td>Tables — Structure, Spanning</td><td><code>&lt;table&gt; &lt;thead&gt; colspan rowspan</code></td><td>Tables page</td></tr>
+          <tr><td>6</td><td>Frames &amp; iFrames</td><td><code>&lt;frameset&gt; &lt;frame&gt; &lt;iframe&gt;</code></td><td>Frames page</td></tr>
+          <tr><td>7</td><td>Forms &amp; Input Controls</td><td><code>&lt;form&gt; &lt;input&gt; &lt;select&gt; &lt;textarea&gt;</code></td><td>Forms page</td></tr>
+          <tr><td>8</td><td>CSS Fundamentals</td><td>Selectors, Box model, Flexbox, Grid</td><td>Style the project</td></tr>
+          <tr><td>9</td><td>JavaScript Basics</td><td>Variables, Functions, DOM, Events</td><td>Add interactivity</td></tr>
+          <tr><td>10</td><td>Final Project &amp; Assessment</td><td>All topics combined</td><td>Complete portfolio site</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table 4: Nested -->
+    <div class="sec">
+      <h2 class="sh">4. Nested Table — Student Grades</h2>
+      <table>
+        <thead><tr><th>Module</th><th>Students &amp; Grades (nested table)</th><th>Average</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>HTML Fundamentals</strong></td>
+            <td>
+              <table style="font-size:0.79rem;border-collapse:collapse;width:100%;">
+                <tr style="background:#2d2d4e;"><th style="padding:4px 9px;color:#fff;">Student</th><th style="padding:4px 9px;color:#fff;">Grade</th><th style="padding:4px 9px;color:#fff;">Score</th></tr>
+                <tr><td style="border:1px solid #d0c8b8;padding:4px 9px;">Anna K.</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">A</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">95%</td></tr>
+                <tr><td style="border:1px solid #d0c8b8;padding:4px 9px;">Boris L.</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">B+</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">87%</td></tr>
+                <tr><td style="border:1px solid #d0c8b8;padding:4px 9px;">Carla M.</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">A−</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">91%</td></tr>
+              </table>
+            </td>
+            <td>91%</td>
+          </tr>
+          <tr>
+            <td><strong>CSS &amp; Design</strong></td>
+            <td>
+              <table style="font-size:0.79rem;border-collapse:collapse;width:100%;">
+                <tr style="background:#2d2d4e;"><th style="padding:4px 9px;color:#fff;">Student</th><th style="padding:4px 9px;color:#fff;">Grade</th><th style="padding:4px 9px;color:#fff;">Score</th></tr>
+                <tr><td style="border:1px solid #d0c8b8;padding:4px 9px;">Dmitri N.</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">B</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">83%</td></tr>
+                <tr><td style="border:1px solid #d0c8b8;padding:4px 9px;">Elena P.</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">A</td><td style="border:1px solid #d0c8b8;padding:4px 9px;">97%</td></tr>
+              </table>
+            </td>
+            <td>90%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ████████████████████████████████████████████
+     PAGE 5 — FRAMES
+████████████████████████████████████████████ -->
+<div id="page-frames" class="page">
+  <div class="ph">
+    <h1>HTML <em>Frames</em></h1>
+    <p>Framesets, inline frames and the evolution to modern layouts — includes Lists (Task 3).</p>
+  </div>
+  <div class="page-wrap">
+
+    <img src="https://images.unsplash.com/photo-1487611459768-bd414656ea10?w=1200&q=80"
+         alt="Multiple browser windows representing HTML frames and iframes" class="banner-img"
+         title="Frames — multiple HTML documents in one browser window">
+
+    <div class="sec">
+      <h2 class="sh">What Are HTML Frames?</h2>
+      <div class="box" style="border-color:var(--gold);border-width:2px;background:#fffdf5;margin-bottom:14px;">
+        <p style="font-size:0.86rem;"><strong>⚠ Note:</strong> The <code>&lt;frameset&gt;</code> and <code>&lt;frame&gt;</code> tags were part of HTML 4 but are <strong>deprecated in HTML5</strong>. The modern alternative is <code>&lt;iframe&gt;</code>. Both are demonstrated below.</p>
+      </div>
+      <div class="box">
+        <p style="font-size:0.86rem;color:var(--muted);">Frames allowed a browser window to be divided into independent panes, each loading a separate HTML document. A common pattern was a navigation sidebar frame + a main content frame. Links in the sidebar used <code>target="framename"</code> to load pages into the content frame without reloading the whole page.</p>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sh">1. Frameset Layout — Simulation</h2>
+      <span class="lbl">&lt;frameset cols="185,*"&gt; simulation</span>
+      <div class="frame-sim">
+        <div class="frame-top">
+          <span>frames.html — frameset layout simulation</span>
+          <span style="font-size:0.68rem;color:#aaa;">cols="185,*"</span>
+        </div>
+        <div class="frame-body">
+          <div class="f-sidebar">
+            <h4>nav.html frame</h4>
+            <ul>
+              <li onclick="showPage('home')">🏠 Home</li>
+              <li onclick="showPage('multimedia')">🖼 Multimedia</li>
+              <li onclick="showPage('lists')">📋 Lists</li>
+              <li onclick="showPage('tables')">📊 Tables</li>
+              <li onclick="showPage('frames')">🔲 Frames</li>
+              <li onclick="showPage('forms')">📝 Forms</li>
+              <li onclick="showPage('mcq')">❓ MCQ Quiz</li>
+            </ul>
+          </div>
+          <div class="f-content">
+            <h3>content.html frame</h3>
+            <p>This pane simulates the main content frame. In a real frameset, clicking a nav link would load the target page here without reloading the sidebar frame.</p>
+            <p>The <code>target</code> attribute on the <code>&lt;a&gt;</code> tag directs the page into a named frame: <code>&lt;a href="tables.html" target="content"&gt;Tables&lt;/a&gt;</code></p>
+            <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;frameset cols="185,*"&gt;
+  &lt;frame src="nav.html"
+         name="sidebar"
+         noresize scrolling="no"&gt;
+  &lt;frame src="home.html"
+         name="content"
+         scrolling="auto"&gt;
+  &lt;noframes&gt;
+    &lt;body&gt;&lt;p&gt;Your browser
+    does not support
+    frames.&lt;/p&gt;&lt;/body&gt;
+  &lt;/noframes&gt;
+&lt;/frameset&gt;
+&lt;/html&gt;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sh">2. Task 3 — Lists Embedded Here</h2>
+      <div class="list-cols">
+        <div class="box">
+          <h3>Unordered List <code>&lt;ul&gt;</code></h3>
+          <ul class="emb">
+            <li>HTML5 — page structure</li>
+            <li>CSS3 — visual styling</li>
+            <li>JavaScript — interactivity</li>
+            <li>PHP — server scripting</li>
+            <li>MySQL — databases</li>
+            <li>HTTP/HTTPS — protocols</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Ordered List <code>&lt;ol&gt;</code></h3>
+          <ol class="emb">
+            <li>Plan the page structure</li>
+            <li>Write the HTML skeleton</li>
+            <li>Apply CSS styles</li>
+            <li>Add JavaScript logic</li>
+            <li>Test in all browsers</li>
+            <li>Deploy to web server</li>
+          </ol>
+        </div>
+        <div class="box">
+          <h3>Definition List <code>&lt;dl&gt;</code></h3>
+          <dl class="emb">
+            <dt>HTML</dt><dd>Markup language for web structure</dd>
+            <dt>CSS</dt><dd>Stylesheet language for presentation</dd>
+            <dt>JavaScript</dt><dd>Scripting for interactivity</dd>
+            <dt>HTTP</dt><dd>Protocol for browser–server comms</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2 class="sh">3. Frame &amp; iframe Attribute Reference</h2>
+      <table>
+        <thead><tr><th>Attribute</th><th>Applies to</th><th>Example</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>src</code></td><td>frame, iframe</td><td><code>"page.html"</code></td><td>URL of the document to load inside the frame</td></tr>
+          <tr><td><code>name</code></td><td>frame, iframe</td><td><code>"content"</code></td><td>Names the frame; links use <code>target="name"</code> to load into it</td></tr>
+          <tr><td><code>cols</code></td><td>frameset</td><td><code>"200,*"</code></td><td>Divides into vertical columns (px, %, or *)</td></tr>
+          <tr><td><code>rows</code></td><td>frameset</td><td><code>"80,*"</code></td><td>Divides into horizontal rows</td></tr>
+          <tr><td><code>width / height</code></td><td>iframe</td><td><code>"100%"</code> / <code>"400"</code></td><td>Dimensions of the inline frame</td></tr>
+          <tr><td><code>scrolling</code></td><td>frame, iframe</td><td><code>yes / no / auto</code></td><td>Controls whether scrollbars appear</td></tr>
+          <tr><td><code>noresize</code></td><td>frame</td><td>(boolean)</td><td>Prevents the user from resizing the frame border</td></tr>
+          <tr><td><code>frameborder</code></td><td>frame, iframe</td><td><code>0</code> or <code>1</code></td><td>Shows (1) or hides (0) a border around the frame</td></tr>
+          <tr><td><code>loading</code></td><td>iframe</td><td><code>"lazy"</code></td><td>Defers loading until the iframe is near the viewport</td></tr>
+          <tr><td><code>sandbox</code></td><td>iframe</td><td><code>"allow-scripts"</code></td><td>Applies security restrictions to embedded content</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ████████████████████████████████████████████
+     PAGE 6 — FORMS
+████████████████████████████████████████████ -->
+<div id="page-forms" class="page">
+  <div class="ph">
+    <h1>HTML <em>Forms</em></h1>
+    <p>Text fields, passwords, radio buttons, checkboxes, dropdowns, textareas and file uploads — all in one form.</p>
+  </div>
+  <div class="page-wrap" style="max-width:860px;">
+
+    <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=80"
+         alt="Person filling in an online form on a laptop — web user input"
+         class="banner-img" title="HTML Forms — collecting user input on the web">
+
+    <div id="form-success" class="form-success">
+      ✔ Your application was submitted successfully! (Demo only — no data was sent.)
+    </div>
+
+    <form action="#" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)">
+
+      <div class="fcard">
+        <h3>1. Personal Information</h3>
+        <div class="row2">
+          <div class="fg"><label class="fl" for="f-fname">First Name <span class="req">*</span></label><input type="text" id="f-fname" name="fname" placeholder="e.g. Anna" required></div>
+          <div class="fg"><label class="fl" for="f-lname">Last Name <span class="req">*</span></label><input type="text" id="f-lname" name="lname" placeholder="e.g. Kowalski" required></div>
+        </div>
+        <div class="row2">
+          <div class="fg"><label class="fl" for="f-email">Email Address</label><input type="email" id="f-email" name="email" placeholder="you@example.com"></div>
+          <div class="fg"><label class="fl" for="f-phone">Phone Number</label><input type="tel" id="f-phone" name="phone" placeholder="+371 2000 0000"></div>
+        </div>
+        <div class="row2">
+          <div class="fg"><label class="fl" for="f-user">Username <span class="req">*</span></label><input type="text" id="f-user" name="username" placeholder="Choose a username" required></div>
+          <div class="fg"><label class="fl" for="f-pass">Password <span class="req">*</span></label><input type="password" id="f-pass" name="password" placeholder="Min. 8 characters" required></div>
+        </div>
+        <div class="fg"><label class="fl" for="f-conf">Confirm Password</label><input type="password" id="f-conf" name="confirm" placeholder="Repeat your password"></div>
+      </div>
+
+      <div class="fcard">
+        <h3>2. Course &amp; Preferences</h3>
+        <div class="fg">
+          <label class="fl" for="f-course">Select Web Technologies Course <span class="req">*</span></label>
+          <select id="f-course" name="course" required>
+            <option value="" disabled selected>— Choose a course —</option>
+            <optgroup label="Frontend Development">
+              <option value="html-css">HTML5 &amp; CSS3 Fundamentals</option>
+              <option value="js">JavaScript Programming (ES2024)</option>
+              <option value="react">React &amp; Modern Frontend Frameworks</option>
+              <option value="responsive">Responsive Web Design</option>
+            </optgroup>
+            <optgroup label="Backend &amp; Database">
+              <option value="php">PHP &amp; MySQL Web Development</option>
+              <option value="node">Node.js &amp; Express.js</option>
+              <option value="python">Python / Django / Flask</option>
+              <option value="db">Database Design &amp; SQL</option>
+            </optgroup>
+            <optgroup label="Full Stack &amp; DevOps">
+              <option value="fullstack">Full Stack Web Development</option>
+              <option value="devops">DevOps, Git &amp; Deployment</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option value="seo">SEO &amp; Web Analytics</option>
+              <option value="security">Web Security &amp; HTTPS</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Study Mode <span class="req">*</span></label>
+          <div class="radio-g">
+            <label><input type="radio" name="mode" value="fulltime" required> Full-time (5 days/week)</label>
+            <label><input type="radio" name="mode" value="parttime"> Part-time (3 days/week)</label>
+            <label><input type="radio" name="mode" value="online"> Online / Remote</label>
+            <label><input type="radio" name="mode" value="evening"> Evening Classes</label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Web Technology Interests (select all that apply)</label>
+          <div class="check-g">
+            <label><input type="checkbox" name="interest" value="frontend"> Frontend (HTML/CSS/JS)</label>
+            <label><input type="checkbox" name="interest" value="backend"> Backend (PHP/Node/Python)</label>
+            <label><input type="checkbox" name="interest" value="ux"> UX &amp; UI Design</label>
+            <label><input type="checkbox" name="interest" value="mobile"> Mobile Web Apps</label>
+            <label><input type="checkbox" name="interest" value="api"> APIs &amp; REST</label>
+            <label><input type="checkbox" name="interest" value="security"> Cybersecurity</label>
+            <label><input type="checkbox" name="interest" value="ai"> AI &amp; Machine Learning</label>
+            <label><input type="checkbox" name="interest" value="cloud"> Cloud &amp; DevOps</label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl" for="f-level">Current Experience Level</label>
+          <select id="f-level" name="level">
+            <option value="beginner">Beginner — no prior web knowledge</option>
+            <option value="elementary">Elementary — know basic HTML</option>
+            <option value="intermediate" selected>Intermediate — comfortable with HTML &amp; CSS</option>
+            <option value="advanced">Advanced — looking to specialise</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fcard">
+        <h3>3. About You &amp; File Uploads</h3>
+        <div class="fg"><label class="fl" for="f-bio">Personal Statement</label><textarea id="f-bio" name="bio" rows="5" placeholder="Tell us about your background, why you want to study web technologies, and your career goals..."></textarea></div>
+        <div class="fg"><label class="fl" for="f-project">Describe a Web Project Idea</label><textarea id="f-project" name="project" rows="4" placeholder="What kind of website or web app would you like to build? (e.g. an e-commerce site, a blog, a web game...)"></textarea></div>
+        <div class="fg"><label class="fl" for="f-cv">Upload CV / Portfolio (PDF, DOC, ZIP)</label><input type="file" id="f-cv" name="cv" accept=".pdf,.doc,.docx,.zip"></div>
+        <div class="fg"><label class="fl" for="f-photo">Profile Photo (JPG, PNG)</label><input type="file" id="f-photo" name="photo" accept=".jpg,.jpeg,.png"></div>
+        <div class="fg"><label class="fl" for="f-url">Portfolio Website URL</label><input type="text" id="f-url" name="portfolio" placeholder="https://yourportfolio.com"></div>
+        <div class="fg">
+          <div class="check-g">
+            <label><input type="checkbox" name="newsletter" value="yes"> Subscribe to Web Technologies newsletter</label>
+          </div>
+        </div>
+        <div class="fg">
+          <div class="check-g">
+            <label><input type="checkbox" name="terms" value="agreed" required> I agree to the Terms &amp; Conditions <span class="req">*</span></label>
+          </div>
+        </div>
+        <div class="btn-row">
+          <input type="submit" value="Submit Application">
+          <input type="reset" value="Reset Form">
+        </div>
+      </div>
+
+    </form>
+
+    <div class="sec">
+      <h2 class="sh">Form Elements Reference</h2>
+      <table>
+        <thead><tr><th>Element</th><th>HTML Code</th><th>Used For</th></tr></thead>
+        <tbody>
+          <tr><td>Text field</td><td><code>&lt;input type="text"&gt;</code></td><td>Name, Username, Portfolio URL</td></tr>
+          <tr><td>Password field</td><td><code>&lt;input type="password"&gt;</code></td><td>Password input — characters are masked</td></tr>
+          <tr><td>Email field</td><td><code>&lt;input type="email"&gt;</code></td><td>Email address — validates format</td></tr>
+          <tr><td>Tel field</td><td><code>&lt;input type="tel"&gt;</code></td><td>Phone number — shows numpad on mobile</td></tr>
+          <tr><td>Radio button</td><td><code>&lt;input type="radio"&gt;</code></td><td>Study Mode — one exclusive choice from a group</td></tr>
+          <tr><td>Checkbox</td><td><code>&lt;input type="checkbox"&gt;</code></td><td>Interests, Newsletter, Terms — multiple allowed</td></tr>
+          <tr><td>Dropdown</td><td><code>&lt;select&gt; &lt;option&gt; &lt;optgroup&gt;</code></td><td>Course selection with grouped categories</td></tr>
+          <tr><td>Textarea</td><td><code>&lt;textarea rows cols&gt;</code></td><td>Multi-line text for statements &amp; descriptions</td></tr>
+          <tr><td>File upload</td><td><code>&lt;input type="file"&gt;</code></td><td>CV, portfolio and profile photo uploads</td></tr>
+          <tr><td>Submit button</td><td><code>&lt;input type="submit"&gt;</code></td><td>Sends all form data to the server</td></tr>
+          <tr><td>Reset button</td><td><code>&lt;input type="reset"&gt;</code></td><td>Clears all fields back to their defaults</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ████████████████████████████████████████████
+     PAGE 7 — MCQ QUIZ
+████████████████████████████████████████████ -->
+<div id="page-mcq" class="page">
+  <div class="ph">
+    <h1>Web Technologies <em>MCQ Quiz</em></h1>
+    <p>12 multiple-choice questions covering HTML, protocols, tags and core concepts. Select the best answer, then click Submit.</p>
+  </div>
+  <div class="page-wrap" style="max-width:820px;">
+
+    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80"
+         alt="Student taking a web technologies quiz on a computer"
+         class="banner-img" title="Web Technologies MCQ Quiz">
+
+    <div class="prog-wrap"><div class="prog-bar" id="prog-bar"></div></div>
+    <div class="prog-lbl" id="prog-lbl">0 of 12 questions answered</div>
+
+    <div id="quiz-container"></div>
+
+    <div class="q-ctrls">
+      <button class="btn btn-s" onclick="resetQuiz()">↺ Start Over</button>
+      <button class="btn btn-p" onclick="submitQuiz()">Submit &amp; Check Answers</button>
+    </div>
+
+    <div id="score-panel">
+      <h2>Quiz Complete!</h2>
+      <div class="snum" id="snum"></div>
+      <div class="ssub" id="ssub"></div>
+      <div class="sgrade" id="sgrade"></div>
+      <div id="sbadge"></div>
+      <br><br>
+      <button class="btn btn-p" onclick="resetQuiz()">Retake Quiz</button>
+      &nbsp;&nbsp;
+      <button class="btn btn-s" onclick="showPage('home')">← Back to Home</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="site-footer">
+  <span>&copy; 2026 Web Technologies Project</span> &nbsp;·&nbsp; Task 02.03.2026 &nbsp;·&nbsp; All Rights Reserved <span>&reg;</span>
+</footer>
+
+
+<!-- ████████████████████████████████████████████
+     JAVASCRIPT
+████████████████████████████████████████████ -->
+<script>
+/* ── Page navigation ── */
+const pages = ['home','multimedia','lists','tables','frames','forms','mcq'];
+
+function showPage(name) {
+  pages.forEach(p => {
+    document.getElementById('page-' + p).classList.remove('active');
+    document.getElementById('btn-' + p).classList.remove('active');
+  });
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('btn-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Form submit ── */
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const msg = document.getElementById('form-success');
+  msg.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => { msg.style.display = 'none'; }, 6000);
+}
+
+/* ── MCQ Quiz ── */
+const questions = [
+  { q: "1. What is the role of web technologies?",
+    opts: ["To design and develop websites and web applications", "To ensure the security of the web only", "To optimise web page loading speed only"],
+    answer: 0, explain: "Web technologies (HTML, CSS, JavaScript, HTTP, databases, etc.) collectively enable the design, development, and operation of websites and web applications." },
+  { q: "2. Which language is used for structuring web content?",
+    opts: ["CSS — Cascading Style Sheets", "HTML — HyperText Markup Language", "JavaScript — scripting language"],
+    answer: 1, explain: "HTML is the standard markup language for defining the structure and content of web pages. CSS handles style; JavaScript handles behaviour." },
+  { q: "3. What does HTML stand for?",
+    opts: ["Hyper Transfer Markup Language", "Hypertext Markup Language", "Hyperlink and Text Markup Language"],
+    answer: 1, explain: "HTML stands for HyperText Markup Language — coined by Tim Berners-Lee when he created the World Wide Web at CERN in 1991." },
+  { q: "4. Which HTML tag defines the root of an HTML document?",
+    opts: ["&lt;header&gt;", "&lt;body&gt;", "&lt;html&gt;"],
+    answer: 2, explain: "The &lt;html&gt; element is the root that wraps the entire document, containing both the &lt;head&gt; (metadata) and &lt;body&gt; (content) sections." },
+  { q: "5. Which tag is used to create a hyperlink in HTML?",
+    opts: ["&lt;link&gt;", "&lt;a&gt;", "&lt;href&gt;"],
+    answer: 1, explain: "The &lt;a&gt; (anchor) tag creates hyperlinks. The href attribute sets the destination URL. &lt;link&gt; links external resources; href is an attribute, not a tag." },
+  { q: "6. What does the &lt;br&gt; tag do in HTML?",
+    opts: ["Adds a horizontal rule / divider line", "Breaks the line and starts a new line", "Creates a bullet point list item"],
+    answer: 1, explain: "&lt;br&gt; is a self-closing tag that inserts a single line break, moving subsequent content to the next line without starting a new paragraph." },
+  { q: "7. Which HTML tag creates an ordered (numbered) list?",
+    opts: ["&lt;ol&gt; — ordered list", "&lt;ul&gt; — unordered list", "&lt;li&gt; — list item"],
+    answer: 0, explain: "&lt;ol&gt; creates an ordered (numbered) list. &lt;ul&gt; creates an unordered (bulleted) list. &lt;li&gt; defines each item inside either list type." },
+  { q: "8. Which tag is used to add an image to an HTML document?",
+    opts: ["&lt;img&gt;", "&lt;src&gt;", "&lt;image&gt;"],
+    answer: 0, explain: "&lt;img&gt; is the self-closing tag for embedding images. It requires src (URL) and alt (alternative text). &lt;src&gt; and &lt;image&gt; are not valid HTML tags." },
+  { q: "9. What is the primary purpose of the &lt;meta&gt; tag?",
+    opts: ["Defines character encoding only", "Provides metadata about the webpage (description, keywords, viewport, charset)", "Specifies the background colour"],
+    answer: 1, explain: "The &lt;meta&gt; tag provides metadata — descriptions, keywords, author, viewport settings and charset. It lives in &lt;head&gt; and is invisible to users." },
+  { q: "10. Which HTML element creates a data table?",
+    opts: ["&lt;table&gt;", "&lt;tabular&gt;", "&lt;tr&gt;"],
+    answer: 0, explain: "&lt;table&gt; is the container. Inside it, &lt;thead&gt;, &lt;tbody&gt;, &lt;tr&gt; (row), &lt;th&gt; (header cell) and &lt;td&gt; (data cell) build the structure. &lt;tabular&gt; is not a valid tag." },
+  { q: "11. Which HTML tag wraps an HTML form?",
+    opts: ["&lt;input&gt;", "&lt;form&gt;", "&lt;button&gt;"],
+    answer: 1, explain: "The &lt;form&gt; element wraps all controls and defines submission behaviour: action (destination URL), method (GET/POST) and enctype (data encoding)." },
+  { q: "12. What does HTML5 introduce for playing video and audio?",
+    opts: ["&lt;media&gt; element", "&lt;video&gt; and &lt;audio&gt; elements", "&lt;playback&gt; element"],
+    answer: 1, explain: "HTML5 introduced native &lt;video&gt; and &lt;audio&gt; elements, eliminating the need for browser plug-ins like Adobe Flash. Both support &lt;source&gt; for multiple format fallbacks." }
+];
+
+const letters = ['a','b','c'];
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.id = 'qcard-' + qi;
+    card.innerHTML = `
+      <span class="qnum">Question ${qi + 1} / ${questions.length}</span>
+      <div class="qtext">${q.q}</div>
+      <div class="opts" id="qopts-${qi}">
+        ${q.opts.map((opt, oi) => `
+          <label class="opt" id="qopt-${qi}-${oi}">
+            <input type="radio" name="q${qi}" value="${oi}">
+            <span class="ol">${letters[oi]}</span>
+            <span>${opt}</span>
+          </label>`).join('')}
+      </div>
+      <div class="fb" id="fb-${qi}"></div>`;
+    container.appendChild(card);
+  });
+  updateProgress();
+  document.querySelectorAll('#quiz-container input[type=radio]')
+    .forEach(r => r.addEventListener('change', updateProgress));
+}
+
+function updateProgress() {
+  const done = questions.filter((_, qi) => document.querySelector(`input[name="q${qi}"]:checked`)).length;
+  document.getElementById('prog-bar').style.width = (done / questions.length * 100) + '%';
+  document.getElementById('prog-lbl').textContent = `${done} of ${questions.length} questions answered`;
+}
+
+function submitQuiz() {
+  let score = 0;
+  questions.forEach((q, qi) => {
+    const sel = document.querySelector(`input[name="q${qi}"]:checked`);
+    const fb  = document.getElementById('fb-' + qi);
+    q.opts.forEach((_, oi) => document.getElementById(`qopt-${qi}-${oi}`).classList.remove('correct','wrong'));
+    document.getElementById(`qopt-${qi}-${q.answer}`).classList.add('correct');
+    if (sel) {
+      const chosen = parseInt(sel.value);
+      if (chosen === q.answer) {
+        score++;
+        fb.textContent = '✔ Correct! — ' + q.explain;
+        fb.className = 'fb show correct';
+      } else {
+        document.getElementById(`qopt-${qi}-${chosen}`).classList.add('wrong');
+        fb.textContent = '✗ Incorrect. — ' + q.explain;
+        fb.className = 'fb show wrong';
+      }
+    } else {
+      fb.textContent = '— Not answered. — ' + q.explain;
+      fb.className = 'fb show wrong';
+    }
+  });
+  document.querySelectorAll('#quiz-container input[type=radio]').forEach(r => r.disabled = true);
+
+  const panel = document.getElementById('score-panel');
+  panel.style.display = 'block';
+  const pct = Math.round(score / questions.length * 100);
+  document.getElementById('snum').textContent = `${score} / ${questions.length}`;
+  document.getElementById('ssub').textContent = `${pct}% correct`;
+  let grade, badge;
+  if (pct >= 90)      { grade='🏆 Excellent — Outstanding!';        badge='<span class="badge bg">GOLD — Expert</span>'; }
+  else if (pct >= 75) { grade='👍 Good — Well done!';               badge='<span class="badge bs2">SILVER — Proficient</span>'; }
+  else if (pct >= 50) { grade='📚 Fair — Keep practising!';         badge='<span class="badge bb">BRONZE — Learning</span>'; }
+  else                { grade='💪 Keep studying — you can do it!';  badge=''; }
+  document.getElementById('sgrade').textContent = grade;
+  document.getElementById('sbadge').innerHTML   = badge;
+  panel.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function resetQuiz() {
+  document.getElementById('score-panel').style.display = 'none';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+
+</body>
+</html>
